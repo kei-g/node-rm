@@ -1,0 +1,39 @@
+jobs:
+  github:
+    if: github.ref_type == 'tag'
+    name: Create a release on GitHub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create a release
+        uses: kei-g/github/create-release@main
+        with:
+          github-token: ${{ secrets.MY_TOKEN }}
+  npm:
+    name: Publish a package to registry.npmjs.org
+    needs:
+      - github
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: npm
+          node-version: latest
+          registry-url: https://registry.npmjs.org
+      - name: Upgrade npm
+        run: npm install npm@latest -g
+      - name: Setup modules
+        run: npm ci
+      - env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        name: Publish
+        run: npm publish
+name: Release
+on:
+  create:
+    tags:
+      - 'v[0-9]+(\.[0-9]+)*(\-[0-9A-Za-z]+)*'
