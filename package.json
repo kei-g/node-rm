@@ -11,7 +11,7 @@
   },
   "description": "A CLI tool to delete files and directories.",
   "devDependencies": {
-    "@types/node": "^20.14.4",
+    "@types/node": "^20.14.5",
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",
     "@vercel/ncc": "^0.38.1",
